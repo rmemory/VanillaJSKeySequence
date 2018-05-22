@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Key Detection</title>
+  <script type="text/javascript" src="http://www.cornify.com/js/cornify.js"></script>
+</head>
+<body>
+<script>
+	const pressed = [];
+	const secretCode = 'richard';
+
+	window.addEventListener('keyup', (event) => {
+		pressed.push(event.key);
+
+		/* 
+		 * The splice() method changes the contents of an array by 
+		 * removing existing elements and/or adding new elements.
+		 *
+		 * array.splice(start[, deleteCount[, item1[, item2[, ...]]]])
+		 * 
+		 * start is the index at which to start changing the array. if
+		 * the value of start is negative (as is the case here), that means
+		 * the starting index will begin that many elements from the end
+		 * of the array, and will automatically be set to a value of zero
+		 * if the value is greater than the length of the array.
+		 *
+		 * So, lets stay secretCode.length is 7, we pass it a value of 
+		 * -secretCode.length - 1 = -8, but the user has only pressed one
+		 * key, meaning pressed.length = 1, so splice truncates the first 
+		 * value automatically to zero. 
+		 * 
+		 * Meanwhile, pressed.length (1) - secretCode.length (7) = -6. 
+		 * Meaning, deleteCount is negative. When deleteCount is negative,
+		 * splice does nothing.
+		 *
+		 * As the user continues to press keys, the length of the pressed
+		 * array grows. When pressed.length = 8, the deleteCount will be
+		 * 1. secretCode.length is a constant, and will always be 7, 
+		 * meaning the first arg will always be -8.
+		 * 
+		 * In that situation, splice will delete the first character,
+		 * at index zero of pressed, meaning the effective length of
+		 * pressed will always be the same as secretCode, where the 
+		 * character located at index zero is always the first one 
+		 * deleted as the user continues to type.
+		 */ 
+		pressed.splice(-secretCode.length - 1, pressed.length - secretCode.length);
+		console.log(pressed);
+
+		// Join turns it back into a string
+		if (pressed.join('').includes(secretCode)) {
+			cornify_add();
+		} 
+	});
+</script>
+</body>
+</html>
